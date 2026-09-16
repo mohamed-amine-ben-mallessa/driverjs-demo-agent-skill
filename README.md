@@ -28,7 +28,7 @@
   <a href="#-compatibility">Compatibility</a> &nbsp;·&nbsp;
   <a href="#-themes">Themes</a> &nbsp;·&nbsp;
   <a href="#-how-it-works">How It Works</a> &nbsp;·&nbsp;
-  <a href="references/examples/">Live Demos</a>
+  <a href="#-demo-gallery">Live Demos</a>
 </p>
 
 ---
@@ -151,34 +151,42 @@ Your agent reads the skill → picks the right pattern → generates a **single 
 
 ## 🎬 Demo Gallery
 
-Five live demos included — open any `.html` file in your browser.
+Five live demos included — **click any screenshot to run it in your browser**, no clone required.
+
+| | Demo | Run it |
+|:-:|:--|:--|
+| 🚶 | Basic tour | [▶ Open live](https://raw.githack.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/main/references/examples/01-basic-tour.html) |
+| 📊 | SaaS dashboard tour | [▶ Open live](https://raw.githack.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/main/references/examples/02-saas-dashboard.html) |
+| 📝 | Form wizard (dark) | [▶ Open live](https://raw.githack.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/main/references/examples/03-form-wizard.html) |
+| ✨ | Feature spotlight | [▶ Open live](https://raw.githack.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/main/references/examples/04-feature-spotlight.html) |
+| 🎮 | Interactive tutorial | [▶ Open live](https://raw.githack.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/main/references/examples/05-interactive-tutorial.html) |
 
 ### 🚶 Product Tour — SaaS Dashboard
 
-<a href="references/examples/02-saas-dashboard.html">
+<a href="https://raw.githack.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/main/references/examples/02-saas-dashboard.html">
   <img src=".github/images/preview-tour.png" width="100%" alt="Product Tour preview" />
 </a>
 
 ### 📝 Form Guidance — Dark Mode
 
-<a href="references/examples/03-form-wizard.html">
+<a href="https://raw.githack.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/main/references/examples/03-form-wizard.html">
   <img src=".github/images/preview-dark-form.png" width="100%" alt="Form Wizard preview" />
 </a>
 
 ### ✨ Feature Spotlight — What's New
 
-<a href="references/examples/04-feature-spotlight.html">
+<a href="https://raw.githack.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/main/references/examples/04-feature-spotlight.html">
   <img src=".github/images/preview-spotlight.png" width="100%" alt="Feature Spotlight preview" />
 </a>
 
 ### 🎮 Interactive Tutorial — Hands-on
 
-<a href="references/examples/05-interactive-tutorial.html">
+<a href="https://raw.githack.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/main/references/examples/05-interactive-tutorial.html">
   <img src=".github/images/preview-interactive.png" width="100%" alt="Interactive Tutorial preview" />
 </a>
 
 <p align="center">
-  <a href="references/examples/">📂 Browse all 5 demos</a>
+  <a href="https://raw.githack.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/main/references/examples/01-basic-tour.html">▶ Run the demos live</a> &nbsp;·&nbsp; <a href="references/examples/">📂 Browse the source</a>
 </p>
 
 ---

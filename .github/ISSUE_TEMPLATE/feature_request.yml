@@ -1,0 +1,25 @@
+name: ✨ New pattern or feature
+description: Suggest a new tour pattern, option, or improvement.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to build?
+      description: The demo or onboarding flow the skill cannot produce today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed pattern
+      description: Which Driver.js options would it use? Sketch the steps array if you can.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: This would touch
+      options:
+        - label: SKILL.md (new demo type)
+        - label: assets/ (new step template)
+        - label: scripts/build.js (new --type)
+        - label: references/examples/ (new example)

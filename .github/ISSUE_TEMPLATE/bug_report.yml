@@ -1,0 +1,37 @@
+name: 🐛 Bug report
+description: Something the skill or the CLI builder generates is broken.
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where does it happen?
+      options:
+        - Generated HTML demo (tour behaves incorrectly)
+        - scripts/build.js (CLI builder)
+        - scripts/install.sh (installer)
+        - SKILL.md (agent picks the wrong pattern)
+        - Documentation
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Agent / environment
+      placeholder: "Claude Code 2.x, Codex CLI, Cursor 2.4, plain Node 22…"
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The prompt you gave your agent, or the exact build.js command.
+      placeholder: |
+        node scripts/build.js --type tour --theme dark --output demo.html
+        → open demo.html → step 3 popover renders off-screen
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+    validations:
+      required: true

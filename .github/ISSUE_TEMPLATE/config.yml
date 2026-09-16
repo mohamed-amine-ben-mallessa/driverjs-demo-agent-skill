@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Question or idea
+    url: https://github.com/mohamed-amine-ben-mallessa/driverjs-demo-agent-skill/discussions
+    about: Ask anything about using the skill with your agent.
+  - name: 📖 Driver.js documentation
+    url: https://driverjs.com
+    about: Upstream docs for the library this skill generates code for.

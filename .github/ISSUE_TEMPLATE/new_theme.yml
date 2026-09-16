@@ -1,0 +1,35 @@
+name: 🎨 New theme
+description: Propose a colour theme for generated demos.
+labels: ["enhancement", "good first issue"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Theme name
+      placeholder: "forest"
+    validations:
+      required: true
+  - type: textarea
+    id: palette
+    attributes:
+      label: Palette
+      description: Same keys as the entries in the `themes` object of scripts/build.js.
+      value: |
+        bg:      #
+        surface: #
+        hover:   #
+        border:  #
+        text:    #
+        muted:   #
+        primary: #
+        pHover:  #
+        overlay: #
+        oAlpha:  0.6
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: "Run: node scripts/build.js --type tour --theme <name> --output demo.html, then drop the screenshot here."
