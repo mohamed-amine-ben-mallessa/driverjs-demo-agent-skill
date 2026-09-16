@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Tutorial — Driver.js Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css" />
+  <style>
+    :root {
+      --bg: #ecfeff; --surface: #ffffff; --surface-hover: #cffafe;
+      --border: #a5f3fc; --text: #164e63; --muted: #0e7490;
+      --primary: #06b6d4; --primary-hover: #0891b2;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; padding: 40px 20px; }
+    .container { max-width: 560px; width: 100%; }
+    .app-header { text-align: center; margin-bottom: 32px; }
+    .app-header .icon { font-size: 3rem; margin-bottom: 10px; }
+    .app-header h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+    .app-header p { font-size: 0.9rem; color: var(--muted); }
+    .input-row { display: flex; gap: 10px; margin-bottom: 20px; }
+    .input-row input { flex: 1; padding: 12px 16px; border: 2px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); font-size: 0.92rem; outline: none; transition: border-color 0.2s; }
+    .input-row input:focus { border-color: var(--primary); }
+    .btn { padding: 12px 20px; border-radius: 10px; font-size: 0.92rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .todo-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .todo-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; transition: all 0.2s; }
+    .todo-item:hover { border-color: var(--primary); box-shadow: 0 2px 12px rgba(6,182,212,0.1); }
+    .todo-item input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
+    .todo-text { flex: 1; font-size: 0.92rem; }
+    .todo-text.done { text-decoration: line-through; opacity: 0.5; }
+    .delete-btn { background: none; border: none; cursor: pointer; font-size: 1rem; opacity: 0.4; transition: opacity 0.2s; }
+    .delete-btn:hover { opacity: 1; }
+    .stats-bar { display: flex; justify-content: space-between; padding: 14px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; font-size: 0.85rem; color: var(--muted); }
+    .tour-btn { position: fixed; bottom: 24px; right: 24px; width: 54px; height: 54px; border-radius: 50%; background: var(--primary); color: white; border: none; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 20px rgba(6,182,212,0.4); transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+    .tour-btn:hover { transform: scale(1.08); }
+    .driver-popover { border: 2px solid #a5f3fc !important; box-shadow: 0 10px 40px rgba(6,182,212,0.2) !important; }
+    .driver-popover-next-btn { background: linear-gradient(135deg, #06b6d4, #6366f1) !important; color: white !important; border: none !important; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="app-header"><div class="icon">📝</div><h1>My Tasks</h1><p>A simple todo app — learn by doing!</p></div>
+    <div class="input-row">
+      <input type="text" id="todo-input" placeholder="Add a new task..." />
+      <button class="btn btn-primary" id="add-btn">Add</button>
+    </div>
+    <div class="todo-list" id="todo-list">
+      <div class="todo-item" id="todo-1"><input type="checkbox" id="check-1" /><span class="todo-text">Review project proposal</span><button class="delete-btn">🗑️</button></div>
+      <div class="todo-item" id="todo-2"><input type="checkbox" id="check-2" /><span class="todo-text">Update team wiki</span><button class="delete-btn">🗑️</button></div>
+      <div class="todo-item" id="todo-3"><input type="checkbox" id="check-3" /><span class="todo-text">Schedule team standup</span><button class="delete-btn">🗑️</button></div>
+    </div>
+    <div class="stats-bar" id="stats-bar"><span id="stats-pending">3 pending</span><span id="stats-done">0 completed</span></div>
+  </div>
+  <button class="tour-btn" id="tour-trigger" title="Start Tutorial">🦊</button>
+  <script>
+    let todos = [{id:1,text:'Review project proposal',done:false},{id:2,text:'Update team wiki',done:false},{id:3,text:'Schedule team standup',done:false}];
+    let nextId = 4;
+    function updateStats() {
+      document.getElementById('stats-pending').textContent = todos.filter(t=>!t.done).length + ' pending';
+      document.getElementById('stats-done').textContent = todos.filter(t=>t.done).length + ' completed';
+    }
+    document.getElementById('add-btn').addEventListener('click', addTodo);
+    document.getElementById('todo-input').addEventListener('keydown', e => { if(e.key==='Enter') addTodo(); });
+    function addTodo() {
+      const input = document.getElementById('todo-input');
+      const text = input.value.trim();
+      if(!text) return;
+      const todo = {id:nextId++,text,done:false};
+      todos.push(todo);
+      const div = document.createElement('div');
+      div.className='todo-item'; div.id='todo-'+todo.id;
+      div.innerHTML='<input type="checkbox" id="check-'+todo.id+'" /><span class="todo-text">'+text+'</span><button class="delete-btn">🗑️</button>';
+      document.getElementById('todo-list').appendChild(div);
+      input.value=''; input.focus(); updateStats();
+    }
+    document.getElementById('todo-list').addEventListener('change', e => {
+      if(e.target.type==='checkbox') {
+        const id=parseInt(e.target.id.split('-')[1]);
+        const todo=todos.find(t=>t.id===id);
+        if(todo){todo.done=e.target.checked;e.target.parentElement.querySelector('.todo-text').classList.toggle('done',todo.done);updateStats();}
+      }
+    });
+    document.getElementById('todo-list').addEventListener('click', e => {
+      if(e.target.classList.contains('delete-btn')){const item=e.target.closest('.todo-item');todos=todos.filter(t=>t.id!==parseInt(item.id.split('-')[1]));item.remove();updateStats();}
+    });
+    const driver = window.driver.js.driver;
+    const driverObj = driver({
+      showProgress: true, animate: true, allowClose: true,
+      overlayOpacity: 0.65, stagePadding: 8, stageRadius: 10,
+      nextBtnText: 'Got it →', prevBtnText: '← Back', doneBtnText: 'Start Using It! 🎉',
+      steps: [
+        { popover: { title: 'Interactive Tutorial 🚀', description: 'Hands-on tour — you\'ll interact with the app as you learn!', side: 'bottom', align: 'center' } },
+        { element: '#todo-input', popover: { title: 'Step 1: Add a Task', description: 'Type a task name here. Something like "Finish tutorial"!', side: 'bottom', align: 'start' }, disableActiveInteraction: false },
+        { element: '#add-btn', popover: { title: 'Step 2: Add It!', description: 'Click "Add" to create your task. Try it now!', side: 'bottom', align: 'end' }, advanceOnClick: true },
+        { element: '#todo-1', popover: { title: 'Step 3: Complete a Task', description: 'Check the box to mark done. Watch the strikethrough!', side: 'right', align: 'center' }, advanceOnClick: true },
+        { element: '#stats-bar', popover: { title: 'Step 4: Track Progress', description: 'Stats update automatically. Great for motivation!', side: 'top', align: 'center' } },
+        { element: '#todo-2', popover: { title: 'Step 5: Delete a Task', description: 'Hover and click 🗑️ to remove. You can always add it back.', side: 'right', align: 'center' } },
+        { popover: { title: 'You\'re a Pro! 🎊', description: 'You\'ve learned everything! 🦊 button restarts this tutorial.', side: 'bottom', align: 'center' } },
+      ],
+    });
+    driverObj.drive();
+    document.getElementById('tour-trigger').addEventListener('click', () => driverObj.drive());
+  </script>
+</body>
+</html>

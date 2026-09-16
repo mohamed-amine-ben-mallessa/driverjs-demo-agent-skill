@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form Wizard — Driver.js Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css" />
+  <style>
+    :root {
+      --bg: #0f172a; --surface: #1e293b; --surface-hover: #334155;
+      --border: #334155; --text: #f1f5f9; --muted: #94a3b8;
+      --primary: #8b5cf6; --primary-hover: #7c3aed;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, sans-serif; background: var(--bg); color: var(--text);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+    }
+    .form-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 40px; width: 100%; max-width: 460px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .form-header { text-align: center; margin-bottom: 32px; }
+    .form-header .icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .form-header h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+    .form-header p { font-size: 0.9rem; color: var(--muted); }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px; }
+    .field input, .field select {
+      width: 100%; padding: 11px 14px;
+      border: 1px solid var(--border); border-radius: 10px;
+      background: var(--bg); color: var(--text); font-size: 0.9rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--primary); }
+    .field select { cursor: pointer; }
+    .field select option { background: var(--surface); }
+    .checkbox-field { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+    .checkbox-field input { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--primary); }
+    .checkbox-field span { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+    .submit-btn {
+      width: 100%; padding: 13px; border: none; border-radius: 10px;
+      background: var(--primary); color: white; font-size: 0.95rem;
+      font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 8px;
+    }
+    .submit-btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .form-footer { text-align: center; margin-top: 20px; font-size: 0.82rem; color: var(--muted); }
+    .form-footer a { color: var(--primary); text-decoration: none; }
+    .tour-btn {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 54px; height: 54px; border-radius: 50%;
+      background: var(--primary); color: white; border: none;
+      font-size: 1.4rem; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(139,92,246,0.4);
+      transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+    }
+    .tour-btn:hover { transform: scale(1.08); }
+    .driver-popover { background: var(--surface) !important; color: var(--text) !important; border: 1px solid var(--border) !important; }
+    .driver-popover-title { color: #f8fafc !important; }
+    .driver-popover-description { color: #cbd5e1 !important; }
+    .driver-popover-progress-text { color: #a78bfa !important; }
+    .driver-popover-next-btn { background: var(--primary) !important; color: white !important; border: none !important; }
+    .driver-popover-prev-btn { background: var(--surface-hover) !important; color: var(--muted) !important; border: 1px solid var(--border) !important; }
+    .driver-popover-close-btn { color: var(--muted) !important; }
+  </style>
+</head>
+<body>
+  <div class="form-card" id="signup-form">
+    <div class="form-header">
+      <div class="icon">🚀</div>
+      <h1>Create Your Account</h1>
+      <p>Start your free 14-day trial. No credit card required.</p>
+    </div>
+    <form onsubmit="event.preventDefault()">
+      <div class="field" id="field-name"><label>Full Name</label><input type="text" placeholder="Jane Doe" /></div>
+      <div class="field" id="field-email"><label>Email Address</label><input type="email" placeholder="jane@company.com" /></div>
+      <div class="field" id="field-password"><label>Password</label><input type="password" placeholder="Min. 8 characters" /></div>
+      <div class="field" id="field-role"><label>Your Role</label><select><option>Select a role...</option><option>Designer</option><option>Developer</option><option>Product Manager</option><option>Marketing</option><option>Founder / CEO</option><option>Other</option></select></div>
+      <div class="field" id="field-team"><label>Team Size</label><select><option>Select team size...</option><option>Just me</option><option>2–10 people</option><option>11–50 people</option><option>50+ people</option></select></div>
+      <div class="field" id="field-terms"><label class="checkbox-field"><input type="checkbox" /><span>I agree to the Terms of Service and Privacy Policy</span></label></div>
+      <button type="submit" class="submit-btn" id="submit-btn">Create Account →</button>
+    </form>
+    <div class="form-footer">Already have an account? <a href="#">Sign in</a></div>
+  </div>
+  <button class="tour-btn" id="tour-trigger" title="Start Tour">🦊</button>
+  <script>
+    const driver = window.driver.js.driver;
+    const driverObj = driver({
+      showProgress: true, animate: true, allowClose: true,
+      overlayOpacity: 0.75, stagePadding: 6, stageRadius: 10,
+      nextBtnText: 'Continue →', prevBtnText: '← Back', doneBtnText: 'Finish ✓',
+      steps: [
+        { popover: { title: 'Let\'s Set Up Your Account 📝', description: 'We\'ll walk you through each field. Under a minute!', side: 'bottom', align: 'center' } },
+        { element: '#field-name', popover: { title: 'Your Name', description: 'First and last name as displayed to teammates.', side: 'right', align: 'start' }, disableActiveInteraction: false },
+        { element: '#field-email', popover: { title: 'Email 📧', description: 'Work email for team features. Verification link sent here.', side: 'right', align: 'start' }, disableActiveInteraction: false },
+        { element: '#field-password', popover: { title: 'Password 🔒', description: 'Min 8 chars. Mix letters, numbers, symbols.', side: 'right', align: 'start' }, disableActiveInteraction: false },
+        { element: '#field-role', popover: { title: 'Your Role', description: 'Personalizes your experience and suggestions.', side: 'left', align: 'start' } },
+        { element: '#field-team', popover: { title: 'Team Size', description: 'Determines which plan fits best.', side: 'left', align: 'start' } },
+        { element: '#field-terms', popover: { title: 'Almost There! ✅', description: 'Accept to continue. Review policies anytime.', side: 'left', align: 'start' } },
+        { element: '#submit-btn', popover: { title: 'You\'re All Set! 🎉', description: 'Click "Create Account" to get started!', side: 'top', align: 'center' }, advanceOnClick: true },
+      ],
+    });
+    driverObj.drive();
+    document.getElementById('tour-trigger').addEventListener('click', () => driverObj.drive());
+  </script>
+</body>
+</html>

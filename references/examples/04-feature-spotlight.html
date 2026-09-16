@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feature Spotlight — Driver.js Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css" />
+  <style>
+    :root {
+      --bg: #0f172a; --surface: #1e293b; --surface-hover: #334155;
+      --border: #334155; --text: #f1f5f9; --muted: #94a3b8;
+      --primary: #3b82f6; --primary-hover: #2563eb;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar { width: 240px; background: var(--surface); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+    .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 1.1rem; }
+    .logo-icon { width: 30px; height: 30px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.8rem; font-weight: 800; }
+    .sidebar-nav { padding: 12px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; color: var(--muted); font-size: 0.85rem; cursor: pointer; transition: all 0.15s; }
+    .nav-item:hover { background: var(--surface-hover); color: var(--text); }
+    .nav-item.active { background: var(--primary); color: white; }
+    .nav-divider { height: 1px; background: var(--border); margin: 12px 0; }
+    .main { flex: 1; display: flex; flex-direction: column; }
+    .topbar { height: 56px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 12px; }
+    .search-wrap { flex: 1; max-width: 380px; position: relative; }
+    .search-wrap input { width: 100%; padding: 7px 12px 7px 34px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 0.85rem; outline: none; }
+    .search-wrap::before { content: '🔍'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.8rem; }
+    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .icon-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.75rem; }
+    .content { flex: 1; padding: 28px; overflow-y: auto; }
+    .banner { background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 16px; padding: 32px; margin-bottom: 28px; display: flex; align-items: center; justify-content: space-between; }
+    .banner-text h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 6px; }
+    .banner-text p { font-size: 0.92rem; opacity: 0.9; }
+    .btn { padding: 10px 20px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-white { background: white; color: #3b82f6; }
+    .btn-white:hover { background: #f0f0f0; transform: translateY(-1px); }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; transition: all 0.25s; cursor: pointer; }
+    .feature-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(59,130,246,0.15); }
+    .feature-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .feature-btn { padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--surface-hover); color: var(--text); transition: all 0.15s; }
+    .feature-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .new-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; background: #22c55e; color: white; margin-left: 8px; vertical-align: middle; }
+    .tour-btn { position: fixed; bottom: 24px; right: 24px; width: 54px; height: 54px; border-radius: 50%; background: var(--primary); color: white; border: none; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 20px rgba(59,130,246,0.4); transition: all 0.2s; display: flex; align-items: center; justify-content: center; z-index: 999; }
+    .tour-btn:hover { transform: scale(1.08); }
+    .driver-popover { background: var(--surface) !important; color: var(--text) !important; border: 1px solid var(--border) !important; }
+    .driver-popover-title { color: #f8fafc !important; }
+    .driver-popover-description { color: #cbd5e1 !important; }
+    .driver-popover-progress-text { color: #60a5fa !important; }
+    .driver-popover-next-btn { background: var(--primary) !important; color: white !important; border: none !important; }
+    .driver-popover-prev-btn { background: var(--surface-hover) !important; color: var(--muted) !important; border: 1px solid var(--border) !important; }
+    .driver-popover-close-btn { color: var(--muted) !important; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="sidebar">
+      <div class="sidebar-logo" id="logo"><div class="logo-icon">N</div><span>NovaApp</span></div>
+      <nav class="sidebar-nav">
+        <div class="nav-item active">🏠 Home</div>
+        <div class="nav-item">📁 Projects</div>
+        <div class="nav-item">📊 Analytics</div>
+        <div class="nav-item">👥 Team</div>
+        <div class="nav-divider"></div>
+        <div class="nav-item" id="export-btn">📤 Export</div>
+        <div class="nav-item" id="collab-btn">🤝 Collaborate</div>
+        <div class="nav-divider"></div>
+        <div class="nav-item">⚙️ Settings</div>
+      </nav>
+    </div>
+    <div class="main">
+      <div class="topbar">
+        <div class="search-wrap"><input placeholder="Search anything..." /></div>
+        <div class="topbar-right">
+          <button class="icon-btn" id="theme-toggle" title="Theme">🌙</button>
+          <button class="icon-btn" id="shortcuts-btn" title="Shortcuts">⌨️</button>
+          <button class="icon-btn" id="ai-btn" title="AI Assistant">🤖</button>
+          <div class="avatar">JD</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="banner" id="whats-new-banner">
+          <div class="banner-text">
+            <h1>✨ What's New in NovaApp</h1>
+            <p>3 powerful features just landed. Take the tour!</p>
+          </div>
+          <button class="btn btn-white" id="tour-start-btn">Take the Tour →</button>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card" id="feat-export"><div class="feature-icon">📊</div><h3>Export Reports <span class="new-badge">NEW</span></h3><p>Download as CSV, PDF, or Excel. Schedule automatic exports.</p><button class="feature-btn">Try it →</button></div>
+          <div class="feature-card" id="feat-collab"><div class="feature-icon">🤝</div><h3>Real-time Collaboration <span class="new-badge">NEW</span></h3><p>See cursors and edits in real-time. Comment and @mention.</p><button class="feature-btn">Try it →</button></div>
+          <div class="feature-card" id="feat-ai"><div class="feature-icon">🤖</div><h3>AI Assistant <span class="new-badge">NEW</span></h3><p>Smart suggestions, auto-summaries, and AI insights.</p><button class="feature-btn">Try it →</button></div>
+          <div class="feature-card" id="feat-theme"><div class="feature-icon">🌙</div><h3>Dark Mode</h3><p>Easy on the eyes. Preference syncs across devices.</p><button class="feature-btn">Try it →</button></div>
+          <div class="feature-card" id="feat-shortcuts"><div class="feature-icon">⌨️</div><h3>Keyboard Shortcuts</h3><p>Press <strong>?</strong> to see all shortcuts. Navigate at lightning speed.</p><button class="feature-btn">Try it →</button></div>
+          <div class="feature-card" id="feat-api"><div class="feature-icon">🔗</div><h3>REST API</h3><p>Custom integrations with full REST API. Webhooks and SDKs.</p><button class="feature-btn">View Docs →</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="tour-btn" id="tour-trigger" title="Start Tour">🦊</button>
+  <script>
+    const driver = window.driver.js.driver;
+    const driverObj = driver({
+      showProgress: true, animate: true, smoothScroll: true, allowClose: true,
+      overlayColor: '#000000', overlayOpacity: 0.15, stagePadding: 10, stageRadius: 14,
+      nextBtnText: 'Next Feature →', prevBtnText: '← Back', doneBtnText: 'Explore Now! 🚀',
+      steps: [
+        { element: '#whats-new-banner', popover: { title: 'What\'s New ✨', description: 'Latest features to boost your workflow.', side: 'bottom', align: 'center' } },
+        { element: '#feat-export', popover: { title: '📊 Export Reports', description: 'Download as CSV, PDF, or Excel. Schedule weekly exports.', side: 'bottom', align: 'start' } },
+        { element: '#feat-collab', popover: { title: '🤝 Real-time Collaboration', description: 'Cursors, edits, comments, @mentions — all live.', side: 'bottom', align: 'center' } },
+        { element: '#feat-ai', popover: { title: '🤖 AI Assistant', description: 'Natural language queries, instant summaries, smart suggestions.', side: 'bottom', align: 'end' } },
+        { element: '#theme-toggle', popover: { title: '🌙 Dark Mode', description: 'Toggle from toolbar. Syncs across devices.', side: 'bottom', align: 'end' } },
+        { element: '#shortcuts-btn', popover: { title: '⌨️ Keyboard Shortcuts', description: 'Press "?" for the full list.', side: 'bottom', align: 'end' } },
+        { element: '#ai-btn', popover: { title: '🤖 Quick AI Access', description: 'Click anytime for instant help.', side: 'bottom', align: 'end' } },
+        { popover: { title: 'You\'re Up to Date! 🎉', description: 'Explore at your own pace. 🦊 button restarts this tour.', side: 'bottom', align: 'center' } },
+      ],
+    });
+    driverObj.drive();
+    document.getElementById('tour-start-btn').addEventListener('click', () => driverObj.drive());
+    document.getElementById('tour-trigger').addEventListener('click', () => driverObj.drive());
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# Generated demos
+demo.html
+test*.html
+*-demo.html
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
